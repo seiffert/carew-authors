@@ -1,0 +1,24 @@
+{
+    "name"        : "seiffert/plugin-authors",
+    "description" : "Authors plugin for carew",
+    "license"     : "MIT",
+    "keywords"    : ["carew"],
+    "authors"     : [
+        {
+            "name"  : "Paul Seiffert",
+            "email" : "paul.seiffert@gmail.com"
+        }
+    ],
+    "require": {
+        "carew/carew": "~1.5"
+    },
+    "autoload": {
+        "psr-0": { "Carew\\Plugin\\Authors": ""}
+    },
+    "target-dir": "Carew/Plugin/Authors",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    }
+}
