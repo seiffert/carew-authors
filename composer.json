@@ -1,5 +1,5 @@
 {
-    "name"        : "seiffert/plugin-authors",
+    "name"        : "seiffert/carew-authors",
     "description" : "Authors plugin for carew",
     "license"     : "MIT",
     "keywords"    : ["carew"],
