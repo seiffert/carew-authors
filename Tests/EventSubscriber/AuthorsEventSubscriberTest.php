@@ -32,7 +32,7 @@ class AuthorsEventSubscriberTest extends \PHPUnit_Framework_TestCase
         $generator->expects($this->once())
             ->method('generateAuthorIndices')
             ->with($author)
-            ->will($this->returnValue($authorPage));
+            ->will($this->returnValue(array($authorPage)));
 
         $event = new CarewEvent();
         $subscriber->onAuthors($event);
@@ -46,6 +46,9 @@ class AuthorsEventSubscriberTest extends \PHPUnit_Framework_TestCase
         $authors = new AuthorRegistry();
         $authors->addAuthor($author);
         $generator = $this->getMock('Carew\Plugin\Authors\Generator\AuthorIndexGenerator', array(), array(), '', false);
+        $generator->expects($this->any())
+            ->method('generateAuthorIndices')
+            ->will($this->returnValue(array()));
 
         $twig = $this->getMock('Twig_Environment');
 
