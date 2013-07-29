@@ -12,14 +12,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class IndexesEventSubscriber implements EventSubscriberInterface
 {
     /** @var AuthorRegistry */
-    private $authorRegistry;
+    private $authors;
 
     /**
      * @param AuthorRegistry $registry
      */
     public function __construct(AuthorRegistry $registry)
     {
-        $this->authorRegistry = $registry;
+        $this->authors = $registry;
     }
 
     /**
@@ -43,8 +43,9 @@ class IndexesEventSubscriber implements EventSubscriberInterface
 
         foreach ($docs as $doc) {
             $data = $doc->getMetadatas();
-            $this->authorRegistry->getAuthor($data['author'])
-                ->addDocument($doc);
+            $author = $this->authors->getAuthor($data['author']);
+
+            $author->addDocument($doc);
         }
 
         $authorsEvent = new CarewEvent(array());

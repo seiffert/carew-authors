@@ -5,6 +5,7 @@ namespace Carew\Plugin\Authors\EventSubscriber;
 use Carew\Event\CarewEvent;
 use Carew\Plugin\Authors\AuthorRegistry;
 use Carew\Plugin\Authors\Events as AuthorEvents;
+use Carew\Plugin\Authors\Generator\AuthorIndexGenerator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class AuthorsEventSubscriber implements EventSubscriberInterface
@@ -12,12 +13,22 @@ class AuthorsEventSubscriber implements EventSubscriberInterface
     /** @var AuthorRegistry */
     private $authors;
 
+    /** @var AuthorIndexGenerator  */
+    private $authorPageGenerator;
+
+    /**
+     * @var \Twig_Environment
+     */
+    private $twig;
+
     /**
      * @param AuthorRegistry $authors
      */
-    public function __construct(AuthorRegistry $authors)
+    public function __construct(AuthorRegistry $authors, AuthorIndexGenerator $generator, \Twig_Environment $twig)
     {
         $this->authors = $authors;
+        $this->authorPageGenerator = $generator;
+        $this->twig = $twig;
     }
 
     /**
@@ -33,7 +44,19 @@ class AuthorsEventSubscriber implements EventSubscriberInterface
      */
     public function onAuthors(CarewEvent $event)
     {
-        // @TODO use author page generator
-        // @TODO update global twig environment to include authors
+        $authorPages = array();
+        $authors = array();
+
+        foreach ($this->authors->getAuthors() as $author) {
+            $authorPages = array_merge(
+                $authorPages,
+                $this->authorPageGenerator->generateAuthorIndices($author)
+            );
+
+            $authors[] = $author;
+        }
+
+        $event->setSubject($authorPages);
+        $this->twig->addGlobal('authors', $authors);
     }
 }

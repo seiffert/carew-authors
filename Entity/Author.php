@@ -10,7 +10,10 @@ class Author
     private $handle;
 
     /** @var array */
-    private $attributes;
+    private $attributes = array(
+        'name' => 'unknown',
+        'email' => ''
+    );
 
     /** @var array|Document[] */
     private $documents = array();
@@ -31,6 +34,21 @@ class Author
     public function getHandle()
     {
         return $this->handle;
+    }
+
+    /**
+     * @param string $attribute
+     * @return mixed
+     */
+    public function get($attribute)
+    {
+        $value = null;
+
+        if (isset($this->attributes[$attribute])) {
+            $value = $this->attributes[$attribute];
+        }
+
+        return $value;
     }
 
     /**

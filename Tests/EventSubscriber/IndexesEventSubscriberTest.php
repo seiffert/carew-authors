@@ -57,12 +57,23 @@ class IndexEventSubscriberTest extends \PHPUnit_Framework_TestCase
         $subscriber = new IndexesEventSubscriber(new AuthorRegistry());
 
         $event = $this->createEvent();
-        $event->getDispatcher()
+        $indexCount = count($event->getSubject());
+
+        $authorsDocs = array(new Document());
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject $dispatcher */
+        $dispatcher = $event->getDispatcher();
+        $dispatcher
             ->expects($this->once())
             ->method('dispatch')
-            ->with(AuthorEvents::AUTHORS);
+            ->with(AuthorEvents::AUTHORS, $this->isInstanceOf('Carew\Event\CarewEvent'))
+            ->will($this->returnCallback(function ($eventType, CarewEvent $event) use ($authorsDocs) {
+                $event->setSubject($authorsDocs);
+            }));
 
         $subscriber->onIndexes($event);
+
+        $this->assertCount(count($authorsDocs) + $indexCount, $event->getSubject());
     }
 
     /**

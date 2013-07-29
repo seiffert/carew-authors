@@ -32,8 +32,8 @@ class AuthorsExtensionTest extends \PHPUnit_Framework_TestCase
             ->with($this->isInstanceOf('Carew\Plugin\Authors\EventSubscriber\AuthorsEventSubscriber'));
 
         $carew = $this->setCarewEventDispatcher(
-            $this->setCarewContainer(
-                $this->createMockCarew()
+            $this->setTwigEnvironment(
+                $this->setCarewContainer($this->createMockCarew())
             ),
             $eventDispatcher
         );
@@ -89,6 +89,21 @@ class AuthorsExtensionTest extends \PHPUnit_Framework_TestCase
         $carew->expects($this->any())
             ->method('getContainer')
             ->will($this->returnValue($container));
+
+        return $carew;
+    }
+
+    /**
+     * @param Carew $carew
+     * @return Carew
+     */
+    private function setTwigEnvironment(Carew $carew)
+    {
+        $carew->getContainer()
+            ->expects($this->at(2))
+            ->method('offsetGet')
+            ->with('twig')
+            ->will($this->returnValue(new \Twig_Environment()));
 
         return $carew;
     }
