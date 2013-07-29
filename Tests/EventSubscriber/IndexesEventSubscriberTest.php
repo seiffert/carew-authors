@@ -45,10 +45,11 @@ class IndexEventSubscriberTest extends \PHPUnit_Framework_TestCase
         $document->setMetadatas(array('author' => 'seiffert'));
 
         $index = new Document();
-        $index->setMetadatas(array($contentType => array($document)));
+        $index->setVars(array($contentType => array($document)));
 
         $subscriber->onIndexes($this->createEvent(array($index)));
 
+        $document->setMetadatas(array('author' => $author), true);
         $this->assertSame(array($document), $author->getDocuments());
     }
 

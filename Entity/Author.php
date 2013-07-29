@@ -37,6 +37,24 @@ class Author
     }
 
     /**
+     * @param $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        return isset($this->attributes[$name]);
+    }
+
+    /**
      * @param string $attribute
      * @return mixed
      */

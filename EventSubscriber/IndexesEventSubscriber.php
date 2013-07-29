@@ -43,9 +43,15 @@ class IndexesEventSubscriber implements EventSubscriberInterface
 
         foreach ($docs as $doc) {
             $data = $doc->getMetadatas();
-            $author = $this->authors->getAuthor($data['author']);
 
-            $author->addDocument($doc);
+            if (isset($data['author'])) {
+                $author = $this->authors->getAuthor($data['author']);
+
+                $author->addDocument($doc);
+
+                $data['author'] = $author;
+                $doc->setMetadatas($data);
+            }
         }
 
         $authorsEvent = new CarewEvent(array());
@@ -63,11 +69,11 @@ class IndexesEventSubscriber implements EventSubscriberInterface
         $result = array();
 
         foreach ($indexes as $index) {
-            $metadata = $index->getMetadatas();
+            $data = $index->getVars();
 
             foreach (array('pages', 'posts') as $type) {
-                if (isset($metadata[$type])) {
-                    $result = array_merge($result, $metadata[$type]);
+                if (isset($data[$type])) {
+                    $result = array_merge($result, $data[$type]);
                 }
             }
         }
